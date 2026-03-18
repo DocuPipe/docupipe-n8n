@@ -1,0 +1,50 @@
+{
+	"name": "n8n-nodes-docupipe",
+	"version": "0.1.0",
+	"description": "n8n community node for DocuPipe - automate document processing, extraction, and classification",
+	"license": "MIT",
+	"homepage": "https://docupipe.ai",
+	"keywords": [
+		"n8n-community-node-package"
+	],
+	"author": {
+		"name": "DocuPipe",
+		"email": "support@docupipe.ai"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/DocuPanda/docupipe-n8n.git"
+	},
+	"scripts": {
+		"build": "n8n-node build",
+		"build:watch": "tsc --watch",
+		"dev": "n8n-node dev",
+		"lint": "n8n-node lint",
+		"lint:fix": "n8n-node lint --fix",
+		"release": "n8n-node release",
+		"prepublishOnly": "n8n-node prerelease"
+	},
+	"files": [
+		"dist"
+	],
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"strict": true,
+		"credentials": [
+			"dist/credentials/DocuPipeApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/DocuPipe/DocuPipe.node.js",
+			"dist/nodes/DocuPipe/DocuPipeTrigger.node.js"
+		]
+	},
+	"devDependencies": {
+		"@n8n/node-cli": "*",
+		"eslint": "9.32.0",
+		"prettier": "3.6.2",
+		"typescript": "5.9.2"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	}
+}

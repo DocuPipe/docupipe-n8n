@@ -1,0 +1,18 @@
+{
+	"node": "n8n-nodes-docupipe.docuPipeTrigger",
+	"nodeVersion": "1.0",
+	"codexVersion": "1.0",
+	"categories": ["Productivity", "Data & Storage"],
+	"resources": {
+		"credentialDocumentation": [
+			{
+				"url": "https://github.com/DocuPanda/docupipe-n8n?tab=readme-ov-file#credentials"
+			}
+		],
+		"primaryDocumentation": [
+			{
+				"url": "https://github.com/DocuPanda/docupipe-n8n?tab=readme-ov-file"
+			}
+		]
+	}
+}
