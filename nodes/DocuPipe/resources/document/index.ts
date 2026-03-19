@@ -22,7 +22,7 @@ export const documentDescription: INodeProperties[] = [
 				name: 'Get',
 				value: 'get',
 				action: 'Get a document',
-				description: 'Retrieve a document by ID — returns filename, text, pages, metadata, and status',
+				description: 'Retrieve a document by ID - returns filename, text, pages, metadata, and status',
 			},
 			{
 				name: 'Merge',

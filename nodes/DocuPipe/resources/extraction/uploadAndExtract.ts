@@ -89,7 +89,7 @@ export const uploadAndExtractDescription: INodeProperties[] = [
 			show: showForBinaryMode,
 		},
 		description:
-			'Name of the binary property containing the file. Leave as "data" — this works with most nodes (Gmail, HTTP Request, Google Drive, Dropbox). Tip: run the previous node first and check its binary output tab to see the property name.',
+			'Name of the binary property containing the file. Leave as "data" - this works with most nodes (Gmail, HTTP Request, Google Drive, Dropbox). Tip: run the previous node first and check its binary output tab to see the property name.',
 	},
 	{
 		displayName: 'Base64 Content',

@@ -271,7 +271,7 @@ export class DocuPipe implements INodeType {
 						} as never,
 					)) as { workflowId: string };
 
-					// step 2: upload document with workflowId — DocuPipe auto-extracts after processing
+					// step 2: upload document with workflowId - DocuPipe auto-extracts after processing
 					const uploadBody = await buildDocumentBody(this, i);
 					uploadBody.workflowId = workflowResponse.workflowId;
 					if (additionalFields.dataset)

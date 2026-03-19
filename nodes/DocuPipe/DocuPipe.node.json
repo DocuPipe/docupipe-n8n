@@ -6,12 +6,12 @@
 	"resources": {
 		"credentialDocumentation": [
 			{
-				"url": "https://github.com/DocuPanda/docupipe-n8n?tab=readme-ov-file#credentials"
+				"url": "https://www.npmjs.com/package/n8n-nodes-docupipe"
 			}
 		],
 		"primaryDocumentation": [
 			{
-				"url": "https://github.com/DocuPanda/docupipe-n8n?tab=readme-ov-file"
+				"url": "https://www.npmjs.com/package/n8n-nodes-docupipe"
 			}
 		]
 	}
