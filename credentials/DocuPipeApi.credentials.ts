@@ -13,7 +13,7 @@ export class DocuPipeApi implements ICredentialType {
 
 	icon: Icon = 'file:../icons/docupipe.svg';
 
-	documentationUrl = 'https://docs.docupipe.ai';
+	documentationUrl = 'https://docs.docupipe.ai/docs/getting-started';
 
 	properties: INodeProperties[] = [
 		{

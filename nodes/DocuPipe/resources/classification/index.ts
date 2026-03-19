@@ -23,7 +23,8 @@ export const classificationDescription: INodeProperties[] = [
 				name: 'Classify',
 				value: 'classify',
 				action: 'Classify a document',
-				description: 'Classify a document into categories. Create classes at app.docupipe.ai/dashboard/classification.',
+				description:
+					'Classify a document into categories. <a href="https://docs.docupipe.ai/docs/classifying-documents">Classification guide</a>.',
 			},
 		],
 		default: 'classify',

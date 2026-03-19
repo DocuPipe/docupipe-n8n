@@ -34,13 +34,15 @@ export const documentDescription: INodeProperties[] = [
 				name: 'Split',
 				value: 'split',
 				action: 'Split a document',
-				description: 'Split a multi-page document into individual documents',
+				description:
+					'Split a multi-page document into individual documents. <a href="https://docs.docupipe.ai/docs/splitting-a-document">Learn more</a>.',
 			},
 			{
 				name: 'Upload',
 				value: 'upload',
 				action: 'Upload a document',
-				description: 'Upload a document from a URL or binary file',
+				description:
+					'Upload a document from a URL, binary file, or base64 string. <a href="https://docs.docupipe.ai/docs/quick-start">Quick start guide</a>.',
 			},
 		],
 		default: 'upload',
