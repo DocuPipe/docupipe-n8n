@@ -72,12 +72,12 @@ export const uploadAndExtractDescription: INodeProperties[] = [
 		name: 'fileName',
 		type: 'string',
 		default: '',
-		required: true,
 		displayOptions: {
 			show: showForUrlMode,
 		},
 		placeholder: 'e.g. invoice.pdf',
-		description: 'Name of the file including extension (e.g. invoice.pdf, receipt.png)',
+		description:
+			'Optional. Name of the file including extension. If not provided, DocuPipe will extract it from the URL automatically.',
 	},
 	{
 		displayName: 'Binary Property',
@@ -108,13 +108,11 @@ export const uploadAndExtractDescription: INodeProperties[] = [
 		name: 'base64FileName',
 		type: 'string',
 		default: '',
-		required: true,
 		displayOptions: {
 			show: showForBase64Mode,
 		},
 		placeholder: 'e.g. invoice.pdf',
-		description:
-			'Name of the file including extension (e.g. invoice.pdf). Required so DocuPipe knows the file format.',
+		description: 'Optional. Name of the file including extension (e.g. invoice.pdf). Recommended for .txt, .JSON, and .xml files so DocuPipe can detect the format.',
 	},
 	{
 		displayName: 'Schema',

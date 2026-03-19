@@ -48,26 +48,20 @@ async function buildDocumentBody(
 
 	if (inputMode === 'base64') {
 		const base64Content = context.getNodeParameter('base64Content', itemIndex) as string;
-		const filename = context.getNodeParameter('base64FileName', itemIndex) as string;
+		const filename = context.getNodeParameter('base64FileName', itemIndex, '') as string;
+		const file: Record<string, unknown> = { contents: base64Content };
+		if (filename) file.filename = filename;
 
-		return {
-			document: {
-				file: {
-					contents: base64Content,
-					filename,
-				},
-			},
-		};
+		return { document: { file } };
 	}
 
 	const fileUrl = context.getNodeParameter('fileUrl', itemIndex) as string;
-	const fileName = context.getNodeParameter('fileName', itemIndex) as string;
+	const fileName = context.getNodeParameter('fileName', itemIndex, '') as string;
+	const doc: Record<string, unknown> = { url: fileUrl };
+	if (fileName) doc.filename = fileName;
 
 	return {
-		document: {
-			url: fileUrl,
-			filename: fileName,
-		},
+		document: doc,
 	};
 }
 
