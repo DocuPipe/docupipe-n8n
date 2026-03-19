@@ -13,7 +13,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/DocuPanda/docupipe-n8n.git"
+		"url": "https://github.com/DocuPipe/docupipe-n8n.git"
 	},
 	"scripts": {
 		"build": "n8n-node build",
