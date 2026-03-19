@@ -15,7 +15,8 @@ export const extractionExtractDescription: INodeProperties[] = [
 		displayOptions: {
 			show: showOnlyForExtractionExtract,
 		},
-		description: 'The ID of the document to extract data from',
+		description:
+			'The ID of the document to extract data from. The document must be fully processed first (status: completed). Find documents at <a href="https://app.docupipe.ai/dashboard/documents">app.docupipe.ai/dashboard/documents</a>.',
 	},
 	{
 		displayName: 'Schema',
@@ -26,7 +27,8 @@ export const extractionExtractDescription: INodeProperties[] = [
 		displayOptions: {
 			show: showOnlyForExtractionExtract,
 		},
-		description: 'The schema to use for extraction. Create schemas in your DocuPipe dashboard.',
+		description:
+			'A schema defines which fields to extract (e.g. invoice number, amount, date). Create and manage schemas at <a href="https://app.docupipe.ai/dashboard/schemas">app.docupipe.ai/dashboard/schemas</a>.',
 		modes: [
 			{
 				displayName: 'From List',
@@ -61,7 +63,8 @@ export const extractionExtractDescription: INodeProperties[] = [
 				name: 'dataset',
 				type: 'string',
 				default: '',
-				description: 'Organizational grouping for this extraction',
+				description:
+					'Group extractions together for organization (e.g. "invoices-2026")',
 			},
 		],
 	},

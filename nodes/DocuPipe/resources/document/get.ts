@@ -15,6 +15,7 @@ export const documentGetDescription: INodeProperties[] = [
 		displayOptions: {
 			show: showOnlyForDocumentGet,
 		},
-		description: 'The ID of the document to retrieve',
+		description:
+			'The ID of the document to retrieve. You get this from the Upload action response, a Document Processed trigger, or from <a href="https://app.docupipe.ai/dashboard/documents">app.docupipe.ai/dashboard/documents</a>.',
 	},
 ];

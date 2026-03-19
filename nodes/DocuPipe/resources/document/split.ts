@@ -15,7 +15,8 @@ export const documentSplitDescription: INodeProperties[] = [
 		displayOptions: {
 			show: showOnlyForDocumentSplit,
 		},
-		description: 'The ID of the multi-page document to split',
+		description:
+			'The ID of the multi-page document to split. Find documents at <a href="https://app.docupipe.ai/dashboard/documents">app.docupipe.ai/dashboard/documents</a>. Use the Split Complete trigger to get the resulting child document IDs.',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -32,14 +33,15 @@ export const documentSplitDescription: INodeProperties[] = [
 				name: 'dataset',
 				type: 'string',
 				default: '',
-				description: 'Organizational grouping for the split documents',
+				description:
+					'Group the split documents together for organization (e.g. "invoices-2026")',
 			},
 			{
 				displayName: 'Instructions',
 				name: 'instructions',
 				type: 'string',
 				default: '',
-				description: 'Instructions for how to split the document',
+				description: 'Instructions for how to split the document (e.g. "Split by invoice")',
 			},
 		],
 	},

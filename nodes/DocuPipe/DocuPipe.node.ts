@@ -16,6 +16,75 @@ import { getSchemas } from './listSearch/getSchemas';
 import { getClasses } from './listSearch/getClasses';
 import { docuPipeApiRequest } from './shared/transport';
 
+function resolveResourceLocator(param: { value: string } | string): string {
+	return typeof param === 'string' ? param : param.value;
+}
+
+async function buildDocumentBody(
+	context: IExecuteFunctions,
+	itemIndex: number,
+): Promise<Record<string, unknown>> {
+	const inputMode = context.getNodeParameter('inputMode', itemIndex) as string;
+
+	if (inputMode === 'binary') {
+		const binaryPropertyName = context.getNodeParameter(
+			'binaryPropertyName',
+			itemIndex,
+		) as string;
+		const binaryData = context.helpers.assertBinaryData(itemIndex, binaryPropertyName);
+		const buffer = await context.helpers.getBinaryDataBuffer(itemIndex, binaryPropertyName);
+		const base64Content = buffer.toString('base64');
+		const filename = binaryData.fileName ?? `document.${binaryData.fileExtension ?? 'pdf'}`;
+
+		return {
+			document: {
+				file: {
+					contents: base64Content,
+					filename,
+				},
+			},
+		};
+	}
+
+	if (inputMode === 'base64') {
+		const base64Content = context.getNodeParameter('base64Content', itemIndex) as string;
+		const filename = context.getNodeParameter('base64FileName', itemIndex) as string;
+
+		return {
+			document: {
+				file: {
+					contents: base64Content,
+					filename,
+				},
+			},
+		};
+	}
+
+	const fileUrl = context.getNodeParameter('fileUrl', itemIndex) as string;
+	const fileName = context.getNodeParameter('fileName', itemIndex) as string;
+
+	return {
+		document: {
+			url: fileUrl,
+			filename: fileName,
+		},
+	};
+}
+
+function parseMetadata(
+	context: IExecuteFunctions,
+	metadata: string,
+	itemIndex: number,
+): unknown {
+	try {
+		return JSON.parse(metadata);
+	} catch {
+		throw new NodeOperationError(context.getNode(), 'Invalid JSON in Metadata field', {
+			itemIndex,
+		});
+	}
+}
+
 export class DocuPipe implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'DocuPipe',
@@ -24,7 +93,8 @@ export class DocuPipe implements INodeType {
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Automate document processing with DocuPipe',
+		description:
+			'Automate document processing, data extraction, and classification with DocuPipe',
 		defaults: {
 			name: 'DocuPipe',
 		},
@@ -94,27 +164,15 @@ export class DocuPipe implements INodeType {
 				let responseData: unknown;
 
 				if (resource === 'document' && operation === 'upload') {
-					const fileUrl = this.getNodeParameter('fileUrl', i) as string;
-					const fileName = this.getNodeParameter('fileName', i) as string;
+					const body = await buildDocumentBody(this, i);
 					const additionalFields = this.getNodeParameter('additionalFields', i) as {
 						dataset?: string;
 						metadata?: string;
 					};
 
-					const body: Record<string, unknown> = {
-						document: { url: fileUrl, filename: fileName },
-					};
 					if (additionalFields.dataset) body.dataset = additionalFields.dataset;
 					if (additionalFields.metadata) {
-						try {
-							body.metadata = JSON.parse(additionalFields.metadata);
-						} catch {
-							throw new NodeOperationError(
-								this.getNode(),
-								'Invalid JSON in Metadata field',
-								{ itemIndex: i },
-							);
-						}
+						body.metadata = parseMetadata(this, additionalFields.metadata, i);
 					}
 
 					responseData = await docuPipeApiRequest.call(
@@ -169,11 +227,9 @@ export class DocuPipe implements INodeType {
 					);
 				} else if (resource === 'extraction' && operation === 'extract') {
 					const documentId = this.getNodeParameter('documentId', i) as string;
-					const schemaIdParam = this.getNodeParameter('schemaId', i) as
-						| { value: string }
-						| string;
-					const schemaId =
-						typeof schemaIdParam === 'string' ? schemaIdParam : schemaIdParam.value;
+					const schemaId = resolveResourceLocator(
+						this.getNodeParameter('schemaId', i) as { value: string } | string,
+					);
 					const additionalFields = this.getNodeParameter('additionalFields', i) as {
 						dataset?: string;
 					};
@@ -201,13 +257,9 @@ export class DocuPipe implements INodeType {
 						`/standardization/${standardizationId}`,
 					);
 				} else if (resource === 'extraction' && operation === 'uploadAndExtract') {
-					const fileUrl = this.getNodeParameter('fileUrl', i) as string;
-					const fileName = this.getNodeParameter('fileName', i) as string;
-					const schemaIdParam = this.getNodeParameter('schemaId', i) as
-						| { value: string }
-						| string;
-					const schemaId =
-						typeof schemaIdParam === 'string' ? schemaIdParam : schemaIdParam.value;
+					const schemaId = resolveResourceLocator(
+						this.getNodeParameter('schemaId', i) as { value: string } | string,
+					);
 					const additionalFields = this.getNodeParameter('additionalFields', i) as {
 						dataset?: string;
 						metadata?: string;
@@ -226,13 +278,13 @@ export class DocuPipe implements INodeType {
 					)) as { workflowId: string };
 
 					// step 2: upload document with workflowId — DocuPipe auto-extracts after processing
-					const uploadBody: Record<string, unknown> = {
-						document: { url: fileUrl, filename: fileName },
-						workflowId: workflowResponse.workflowId,
-					};
-					if (additionalFields.dataset) uploadBody.dataset = additionalFields.dataset;
-					if (additionalFields.metadata)
-						uploadBody.metadata = JSON.parse(additionalFields.metadata);
+					const uploadBody = await buildDocumentBody(this, i);
+					uploadBody.workflowId = workflowResponse.workflowId;
+					if (additionalFields.dataset)
+						uploadBody.dataset = additionalFields.dataset;
+					if (additionalFields.metadata) {
+						uploadBody.metadata = parseMetadata(this, additionalFields.metadata, i);
+					}
 
 					responseData = await docuPipeApiRequest.call(
 						this,
@@ -242,11 +294,9 @@ export class DocuPipe implements INodeType {
 					);
 				} else if (resource === 'classification' && operation === 'classify') {
 					const documentId = this.getNodeParameter('documentId', i) as string;
-					const classIdsParam = this.getNodeParameter('classIds', i) as
-						| { value: string }
-						| string;
-					const classId =
-						typeof classIdsParam === 'string' ? classIdsParam : classIdsParam.value;
+					const classId = resolveResourceLocator(
+						this.getNodeParameter('classIds', i) as { value: string } | string,
+					);
 					const additionalFields = this.getNodeParameter('additionalFields', i) as {
 						multiClass?: boolean;
 					};

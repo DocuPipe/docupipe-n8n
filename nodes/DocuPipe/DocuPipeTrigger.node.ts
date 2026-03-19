@@ -15,7 +15,8 @@ export class DocuPipeTrigger implements INodeType {
 		group: ['trigger'],
 		version: 1,
 		subtitle: '={{$parameter["event"]}}',
-		description: 'Triggers when DocuPipe completes processing a document',
+		description:
+			'Triggers when DocuPipe completes a document operation (processing, extraction, classification, split, or merge)',
 		defaults: {
 			name: 'DocuPipe Trigger',
 		},
@@ -47,52 +48,62 @@ export class DocuPipeTrigger implements INodeType {
 					{
 						name: 'Classification Complete',
 						value: 'classification.processed.success',
-						description: 'Fires after document classification',
+						description:
+							'Fires after document classification. Returns documentId and assigned classIds.',
 					},
 					{
 						name: 'Classification Error',
 						value: 'classification.processed.error',
-						description: 'Fires on classification error',
+						description:
+							'Fires when classification fails. Returns documentId and errorMessage.',
 					},
 					{
 						name: 'Document Error',
 						value: 'document.processed.error',
-						description: 'Fires on document processing error',
+						description:
+							'Fires when document processing (OCR) fails. Returns documentId and errorMessage.',
 					},
 					{
 						name: 'Document Processed',
 						value: 'document.processed.success',
-						description: 'Fires after OCR completes',
+						description:
+							'Fires after OCR completes and document is ready. Returns documentId, filename, text, and numPages.',
 					},
 					{
 						name: 'Extraction Complete',
 						value: 'standardization.processed.success',
-						description: 'Fires after data extraction finishes',
+						description:
+							'Fires after data extraction finishes. Returns standardizationId, documentId, schemaId, and extracted data.',
 					},
 					{
 						name: 'Extraction Error',
 						value: 'standardization.processed.error',
-						description: 'Fires on extraction error',
+						description:
+							'Fires when extraction fails. Returns standardizationId, documentId, and errorMessage.',
 					},
 					{
 						name: 'Merge Complete',
 						value: 'merge.processed.success',
-						description: 'Fires after document merge',
+						description:
+							'Fires after document merge. Returns the new merged documentId and source documentIds.',
 					},
 					{
 						name: 'Merge Error',
 						value: 'merge.processed.error',
-						description: 'Fires on merge error',
+						description:
+							'Fires when merge fails. Returns documentIds and errorMessage.',
 					},
 					{
 						name: 'Split Complete',
 						value: 'split.processed.success',
-						description: 'Fires after document split',
+						description:
+							'Fires after document split. Returns parentDocumentId and childDocumentIds.',
 					},
 					{
 						name: 'Split Error',
 						value: 'split.processed.error',
-						description: 'Fires on split error',
+						description:
+							'Fires when split fails. Returns documentId and errorMessage.',
 					},
 				],
 			},

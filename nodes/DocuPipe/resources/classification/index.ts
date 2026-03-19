@@ -23,7 +23,7 @@ export const classificationDescription: INodeProperties[] = [
 				name: 'Classify',
 				value: 'classify',
 				action: 'Classify a document',
-				description: 'Classify a document into categories',
+				description: 'Classify a document into categories. Create classes at app.docupipe.ai/dashboard/classification.',
 			},
 		],
 		default: 'classify',
@@ -37,7 +37,8 @@ export const classificationDescription: INodeProperties[] = [
 		displayOptions: {
 			show: showOnlyForClassify,
 		},
-		description: 'The ID of the document to classify',
+		description:
+			'The ID of the document to classify. The document must be fully processed first (status: completed). Find documents at <a href="https://app.docupipe.ai/dashboard/documents">app.docupipe.ai/dashboard/documents</a>.',
 	},
 	{
 		displayName: 'Classes',
@@ -48,7 +49,8 @@ export const classificationDescription: INodeProperties[] = [
 		displayOptions: {
 			show: showOnlyForClassify,
 		},
-		description: 'The classes to classify the document into',
+		description:
+			'A class is a document category (e.g. "Invoice", "Receipt", "Contract"). Create and manage classes at <a href="https://app.docupipe.ai/dashboard/classification">app.docupipe.ai/dashboard/classification</a>.',
 		modes: [
 			{
 				displayName: 'From List',
@@ -83,7 +85,8 @@ export const classificationDescription: INodeProperties[] = [
 				name: 'multiClass',
 				type: 'boolean',
 				default: false,
-				description: 'Whether to allow multiple classifications',
+				description:
+					'Whether to allow the document to be assigned to multiple classes simultaneously',
 			},
 		],
 	},

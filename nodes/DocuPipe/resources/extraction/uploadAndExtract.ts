@@ -5,7 +5,55 @@ const showOnlyForUploadAndExtract = {
 	resource: ['extraction'],
 };
 
+const showForUrlMode = {
+	operation: ['uploadAndExtract'],
+	resource: ['extraction'],
+	inputMode: ['url'],
+};
+
+const showForBinaryMode = {
+	operation: ['uploadAndExtract'],
+	resource: ['extraction'],
+	inputMode: ['binary'],
+};
+
+const showForBase64Mode = {
+	operation: ['uploadAndExtract'],
+	resource: ['extraction'],
+	inputMode: ['base64'],
+};
+
 export const uploadAndExtractDescription: INodeProperties[] = [
+	{
+		displayName: 'Input Mode',
+		name: 'inputMode',
+		type: 'options',
+		options: [
+			{
+				name: 'URL',
+				value: 'url',
+				description: 'Provide a publicly accessible link to the file',
+			},
+			{
+				name: 'Binary File',
+				value: 'binary',
+				description:
+					'Use a file from a previous node (e.g. Gmail, Google Drive, HTTP Request, Dropbox)',
+			},
+			{
+				name: 'Base64',
+				value: 'base64',
+				description:
+					'Provide the file content as a base64-encoded string (e.g. from a database or API)',
+			},
+		],
+		default: 'url',
+		displayOptions: {
+			show: showOnlyForUploadAndExtract,
+		},
+		description:
+			'How to provide the document. "URL" for public links. "Binary File" for files from previous nodes (email attachments, cloud storage). "Base64" for raw base64-encoded content from a database or API.',
+	},
 	{
 		displayName: 'File URL',
 		name: 'fileUrl',
@@ -13,9 +61,11 @@ export const uploadAndExtractDescription: INodeProperties[] = [
 		default: '',
 		required: true,
 		displayOptions: {
-			show: showOnlyForUploadAndExtract,
+			show: showForUrlMode,
 		},
-		description: 'Direct URL to the file to upload. Must be a publicly accessible link.',
+		placeholder: 'https://example.com/document.pdf',
+		description:
+			'Direct URL to the file. Must be publicly accessible (not behind a login). For private files, switch to Binary File mode. Supported: PDF, PNG, JPEG, TIFF, DOCX, XLSX, CSV, and more.',
 	},
 	{
 		displayName: 'Filename',
@@ -24,10 +74,47 @@ export const uploadAndExtractDescription: INodeProperties[] = [
 		default: '',
 		required: true,
 		displayOptions: {
-			show: showOnlyForUploadAndExtract,
+			show: showForUrlMode,
 		},
 		placeholder: 'e.g. invoice.pdf',
-		description: 'Name of the file including extension',
+		description: 'Name of the file including extension (e.g. invoice.pdf, receipt.png)',
+	},
+	{
+		displayName: 'Binary Property',
+		name: 'binaryPropertyName',
+		type: 'string',
+		default: 'data',
+		required: true,
+		displayOptions: {
+			show: showForBinaryMode,
+		},
+		description:
+			'Name of the binary property containing the file. Leave as "data" — this works with most nodes (Gmail, HTTP Request, Google Drive, Dropbox). Tip: run the previous node first and check its binary output tab to see the property name.',
+	},
+	{
+		displayName: 'Base64 Content',
+		name: 'base64Content',
+		type: 'string',
+		default: '',
+		required: true,
+		displayOptions: {
+			show: showForBase64Mode,
+		},
+		description:
+			'The file content as a base64-encoded string. You can reference this from a previous node (e.g. a database query or API response that returns base64).',
+	},
+	{
+		displayName: 'Filename',
+		name: 'base64FileName',
+		type: 'string',
+		default: '',
+		required: true,
+		displayOptions: {
+			show: showForBase64Mode,
+		},
+		placeholder: 'e.g. invoice.pdf',
+		description:
+			'Name of the file including extension (e.g. invoice.pdf). Required so DocuPipe knows the file format.',
 	},
 	{
 		displayName: 'Schema',
@@ -38,7 +125,8 @@ export const uploadAndExtractDescription: INodeProperties[] = [
 		displayOptions: {
 			show: showOnlyForUploadAndExtract,
 		},
-		description: 'The schema to use for extraction. Create schemas in your DocuPipe dashboard.',
+		description:
+			'A schema defines which fields to extract (e.g. invoice number, amount, date). Create and manage schemas at <a href="https://app.docupipe.ai/dashboard/schemas">app.docupipe.ai/dashboard/schemas</a>.',
 		modes: [
 			{
 				displayName: 'From List',
@@ -73,14 +161,16 @@ export const uploadAndExtractDescription: INodeProperties[] = [
 				name: 'dataset',
 				type: 'string',
 				default: '',
-				description: 'Organizational grouping for the document',
+				description:
+					'Group documents together for organization (e.g. "invoices-2026", "client-acme")',
 			},
 			{
 				displayName: 'Metadata',
 				name: 'metadata',
 				type: 'json',
 				default: '{}',
-				description: 'Custom key-value pairs to attach to the document',
+				description:
+					'JSON object with custom key-value pairs (e.g. {"invoiceNumber": "INV-001"}). Passed through to webhook payloads and extraction results.',
 			},
 		],
 	},

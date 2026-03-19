@@ -15,6 +15,7 @@ export const extractionGetResultDescription: INodeProperties[] = [
 		displayOptions: {
 			show: showOnlyForExtractionGetResult,
 		},
-		description: 'The ID of the extraction result to retrieve',
+		description:
+			'The ID of the extraction result to retrieve. You get this from the Extract action response or an Extraction Complete trigger. Results may take a few seconds to process after extraction starts.',
 	},
 ];

@@ -22,7 +22,7 @@ export const documentDescription: INodeProperties[] = [
 				name: 'Get',
 				value: 'get',
 				action: 'Get a document',
-				description: 'Retrieve a document by ID',
+				description: 'Retrieve a document by ID — returns filename, text, pages, metadata, and status',
 			},
 			{
 				name: 'Merge',
@@ -40,7 +40,7 @@ export const documentDescription: INodeProperties[] = [
 				name: 'Upload',
 				value: 'upload',
 				action: 'Upload a document',
-				description: 'Upload a document from a URL',
+				description: 'Upload a document from a URL or binary file',
 			},
 		],
 		default: 'upload',

@@ -22,7 +22,8 @@ export class DocuPipeApi implements ICredentialType {
 			type: 'string',
 			typeOptions: { password: true },
 			default: '',
-			description: 'API key from your DocuPipe dashboard (Settings → General)',
+			description:
+			'Your DocuPipe API key. Find it at <a href="https://app.docupipe.ai/settings/general">app.docupipe.ai/settings/general</a>. <a href="https://docupipe.ai">Sign up for free</a> if you don\'t have an account yet.',
 		},
 	];
 

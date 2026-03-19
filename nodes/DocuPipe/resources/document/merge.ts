@@ -16,7 +16,8 @@ export const documentMergeDescription: INodeProperties[] = [
 			show: showOnlyForDocumentMerge,
 		},
 		placeholder: 'e.g. doc_abc123,doc_def456',
-		description: 'Comma-separated list of document IDs to merge (minimum 2)',
+		description:
+			'Comma-separated list of document IDs to merge (minimum 2). Find documents at <a href="https://app.docupipe.ai/dashboard/documents">app.docupipe.ai/dashboard/documents</a>.',
 	},
 	{
 		displayName: 'Filename',
@@ -28,7 +29,7 @@ export const documentMergeDescription: INodeProperties[] = [
 			show: showOnlyForDocumentMerge,
 		},
 		placeholder: 'e.g. merged_document.pdf',
-		description: 'Name for the merged document',
+		description: 'Name for the merged document including extension (e.g. merged_invoices.pdf)',
 	},
 	{
 		displayName: 'Additional Fields',
@@ -45,7 +46,8 @@ export const documentMergeDescription: INodeProperties[] = [
 				name: 'dataset',
 				type: 'string',
 				default: '',
-				description: 'Organizational grouping for the merged document',
+				description:
+					'Group the merged document for organization (e.g. "invoices-2026")',
 			},
 		],
 	},

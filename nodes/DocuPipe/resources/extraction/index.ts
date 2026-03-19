@@ -20,7 +20,7 @@ export const extractionDescription: INodeProperties[] = [
 				name: 'Extract',
 				value: 'extract',
 				action: 'Extract data from a document',
-				description: 'Extract structured data using a schema',
+				description: 'Extract structured data using a schema. Create schemas at app.docupipe.ai/dashboard/schemas.',
 			},
 			{
 				name: 'Get Result',
@@ -32,7 +32,7 @@ export const extractionDescription: INodeProperties[] = [
 				name: 'Upload and Extract',
 				value: 'uploadAndExtract',
 				action: 'Upload and extract data from a document',
-				description: 'Upload a document and extract data in one step',
+				description: 'Upload a document and extract data in one step. Create schemas first at app.docupipe.ai/dashboard/schemas.',
 			},
 		],
 		default: 'extract',
