@@ -345,7 +345,7 @@ export class DocuPipe implements INodeType {
 						pairedItem: i,
 					});
 				} else {
-					throw new NodeOperationError(this.getNode(), error as Error, { itemIndex: i });
+					throw error;
 				}
 			}
 		}

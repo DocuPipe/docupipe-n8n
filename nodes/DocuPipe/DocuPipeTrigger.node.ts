@@ -157,8 +157,11 @@ export class DocuPipeTrigger implements INodeType {
 						},
 						json: true,
 					});
-				} catch {
+				} catch (error) {
 					// endpoint may already be deleted
+					if ((error as { httpCode?: string }).httpCode !== '404') {
+						throw error;
+					}
 				}
 
 				delete webhookData.endpointId;
