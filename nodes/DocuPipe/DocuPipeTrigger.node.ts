@@ -10,6 +10,7 @@ export class DocuPipeTrigger implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: 'DocuPipe Trigger',
 		name: 'docuPipeTrigger',
+		usableAsTool: true,
 		icon: 'file:../../icons/docupipe.svg',
 		group: ['trigger'],
 		version: 1,
