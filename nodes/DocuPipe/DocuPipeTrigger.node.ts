@@ -5,7 +5,6 @@ import type {
 	INodeTypeDescription,
 	IWebhookResponseData,
 } from 'n8n-workflow';
-import { NodeConnectionTypes } from 'n8n-workflow';
 
 export class DocuPipeTrigger implements INodeType {
 	description: INodeTypeDescription = {
@@ -20,9 +19,8 @@ export class DocuPipeTrigger implements INodeType {
 		defaults: {
 			name: 'DocuPipe Trigger',
 		},
-		usableAsTool: true,
 		inputs: [],
-		outputs: [NodeConnectionTypes.Main],
+		outputs: ['main'],
 		credentials: [
 			{
 				name: 'docuPipeApi',

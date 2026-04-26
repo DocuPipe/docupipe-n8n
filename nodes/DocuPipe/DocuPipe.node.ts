@@ -4,8 +4,9 @@ import type {
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
+	JsonObject,
 } from 'n8n-workflow';
-import { NodeConnectionTypes, NodeOperationError } from 'n8n-workflow';
+import { NodeApiError, NodeOperationError } from 'n8n-workflow';
 import { documentDescription } from './resources/document';
 import { extractionDescription } from './resources/extraction';
 import { uploadAndExtractDescription } from './resources/extraction/uploadAndExtract';
@@ -93,8 +94,8 @@ export class DocuPipe implements INodeType {
 			name: 'DocuPipe',
 		},
 		usableAsTool: true,
-		inputs: [NodeConnectionTypes.Main],
-		outputs: [NodeConnectionTypes.Main],
+		inputs: ['main'],
+		outputs: ['main'],
 		credentials: [
 			{
 				name: 'docuPipeApi',
@@ -339,14 +340,21 @@ export class DocuPipe implements INodeType {
 					});
 				}
 			} catch (error) {
+				const apiError =
+					error instanceof NodeApiError || error instanceof NodeOperationError
+						? error
+						: new NodeApiError(this.getNode(), error as JsonObject, {
+								itemIndex: i,
+							});
+
 				if (this.continueOnFail()) {
 					returnData.push({
-						json: { error: (error as Error).message },
+						json: { error: apiError } as unknown as IDataObject,
 						pairedItem: i,
 					});
-				} else {
-					throw error;
+					continue;
 				}
+				throw apiError;
 			}
 		}
 

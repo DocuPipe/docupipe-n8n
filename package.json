@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-docupipe",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"description": "n8n community node for DocuPipe - automate document processing, extraction, and classification",
 	"license": "MIT",
 	"homepage": "https://docupipe.ai",
@@ -39,7 +39,8 @@
 		]
 	},
 	"devDependencies": {
-		"@n8n/node-cli": "*",
+		"@n8n/node-cli": "^0.23.0",
+		"@types/node": "^20.0.0",
 		"eslint": "9.32.0",
 		"prettier": "3.6.2",
 		"typescript": "5.9.2"

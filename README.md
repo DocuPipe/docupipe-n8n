@@ -32,7 +32,7 @@ You need a DocuPipe API key to use this node:
 
 ### Document
 
-- **Upload** - Upload a document from a URL or binary file (e.g. email attachment)
+- **Upload** - Upload a document from a URL, binary file (e.g. email attachment), or base64 string
 - **Get** - Retrieve a document's details by its ID
 - **Split** - Split a multi-page document into individual documents
 - **Merge** - Merge multiple documents into one
