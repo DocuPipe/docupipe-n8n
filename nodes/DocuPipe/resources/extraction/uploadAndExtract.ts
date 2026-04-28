@@ -145,13 +145,35 @@ export const uploadAndExtractDescription: INodeProperties[] = [
 		],
 	},
 	{
+		displayName: 'API Version',
+		name: 'apiVersion',
+		type: 'options',
+		default: 'v3',
+		options: [
+			{
+				name: 'V3',
+				value: 'v3',
+				description: 'Latest agentic extraction engine. Recommended.',
+			},
+			{
+				name: 'V2 (Legacy)',
+				value: 'v2',
+				description: 'Legacy extraction engine. Use for continuity with existing workflows.',
+			},
+		],
+		displayOptions: {
+			show: showOnlyForUploadAndExtract,
+		},
+		description: 'Which extraction engine to use',
+	},
+	{
 		displayName: 'Additional Fields',
-		name: 'additionalFields',
+		name: 'additionalFieldsV3',
 		type: 'collection',
 		placeholder: 'Add Field',
 		default: {},
 		displayOptions: {
-			show: showOnlyForUploadAndExtract,
+			show: { ...showOnlyForUploadAndExtract, apiVersion: ['v3'] },
 		},
 		options: [
 			{
@@ -163,12 +185,176 @@ export const uploadAndExtractDescription: INodeProperties[] = [
 					'Group documents together for organization (e.g. "invoices-2026", "client-acme")',
 			},
 			{
+				displayName: 'Effort Level',
+				name: 'effortLevel',
+				type: 'options',
+				default: 'standard',
+				options: [
+					{ name: 'Standard', value: 'standard' },
+				],
+				description:
+					'Effort level for the V3 extractor. Only Standard is currently available; High is coming soon.',
+			},
+			{
+				displayName: 'Guidelines',
+				name: 'guidelines',
+				type: 'string',
+				typeOptions: { rows: 4 },
+				default: '',
+				description: 'Free-text instructions to steer the extraction (e.g. tone, formatting rules)',
+			},
+		],
+	},
+	{
+		displayName: 'Advanced Options',
+		name: 'advancedV3',
+		type: 'collection',
+		placeholder: 'Add Option',
+		default: {},
+		displayOptions: {
+			show: { ...showOnlyForUploadAndExtract, apiVersion: ['v3'] },
+		},
+		options: [
+			{
 				displayName: 'Metadata',
 				name: 'metadata',
 				type: 'json',
 				default: '{}',
 				description:
-					'JSON object with custom key-value pairs (e.g. {"invoiceNumber": "INV-001"}). Passed through to webhook payloads and extraction results.',
+					'JSON object with custom key-value pairs (e.g. {"invoiceNumber": "INV-001"}). Stored on the document and passed through to webhook payloads. Toggle Use Metadata to feed it into extraction.',
+			},
+			{
+				displayName: 'Pages',
+				name: 'pages',
+				type: 'string',
+				default: '',
+				placeholder: '0,1,4',
+				description:
+					'Comma-separated 0-indexed page numbers to extract from. Leave empty to extract from the full document.',
+			},
+			{
+				displayName: 'Timeout (Seconds)',
+				name: 'standardizeTimeout',
+				type: 'number',
+				default: 0,
+				description: 'Webhook error-reporting timeout in seconds for the standardize step. Leave 0 to use the server default.',
+			},
+			{
+				displayName: 'Use Metadata',
+				name: 'useMetadata',
+				type: 'boolean',
+				default: false,
+				description:
+					'Whether to feed the document\'s metadata into the extraction context. Set Metadata above to provide it.',
+			},
+		],
+	},
+	{
+		displayName: 'Additional Fields',
+		name: 'additionalFieldsV2',
+		type: 'collection',
+		placeholder: 'Add Field',
+		default: {},
+		displayOptions: {
+			show: { ...showOnlyForUploadAndExtract, apiVersion: ['v2'] },
+		},
+		options: [
+			{
+				displayName: 'Dataset',
+				name: 'dataset',
+				type: 'string',
+				default: '',
+				description:
+					'Group documents together for organization (e.g. "invoices-2026", "client-acme")',
+			},
+			{
+				displayName: 'Display Mode',
+				name: 'displayMode',
+				type: 'options',
+				default: 'auto',
+				options: [
+					{ name: 'Auto', value: 'auto' },
+					{ name: 'Image', value: 'image' },
+					{ name: 'Sections', value: 'sections' },
+					{ name: 'Spatial', value: 'spatial' },
+				],
+				description: 'How the document is rendered for the V2 extractor',
+			},
+			{
+				displayName: 'Effort Level',
+				name: 'effortLevel',
+				type: 'options',
+				default: 'standard',
+				options: [
+					{ name: 'Extended', value: 'extended' },
+					{ name: 'High', value: 'high' },
+					{ name: 'Standard', value: 'standard' },
+				],
+				description: 'Higher effort uses more model capacity at the cost of latency',
+			},
+			{
+				displayName: 'Guidelines',
+				name: 'guidelines',
+				type: 'string',
+				typeOptions: { rows: 4 },
+				default: '',
+				description: 'Free-text instructions to steer the extraction (e.g. tone, formatting rules)',
+			},
+			{
+				displayName: 'Split Mode',
+				name: 'splitMode',
+				type: 'options',
+				default: 'auto',
+				options: [
+					{ name: 'All', value: 'all' },
+					{ name: 'Auto', value: 'auto' },
+					{ name: 'Never', value: 'never' },
+				],
+				description: 'How the document is split into chunks before extraction',
+			},
+		],
+	},
+	{
+		displayName: 'Advanced Options',
+		name: 'advancedV2',
+		type: 'collection',
+		placeholder: 'Add Option',
+		default: {},
+		displayOptions: {
+			show: { ...showOnlyForUploadAndExtract, apiVersion: ['v2'] },
+		},
+		options: [
+			{
+				displayName: 'Metadata',
+				name: 'metadata',
+				type: 'json',
+				default: '{}',
+				description:
+					'JSON object with custom key-value pairs (e.g. {"invoiceNumber": "INV-001"}). Stored on the document and passed through to webhook payloads. Toggle Use Metadata to feed it into extraction.',
+			},
+			{
+				displayName: 'Pages',
+				name: 'pages',
+				type: 'string',
+				default: '',
+				placeholder: '0,1,4',
+				description:
+					'Comma-separated 0-indexed page numbers to extract from. Leave empty to extract from the full document.',
+			},
+			{
+				displayName: 'Timeout (Seconds)',
+				name: 'standardizeTimeout',
+				type: 'number',
+				default: 0,
+				description: 'Webhook error-reporting timeout in seconds for the standardize step. Leave 0 to use the server default.',
+			},
+			{
+				displayName: 'Use Metadata',
+				name: 'useMetadata',
+				type: 'boolean',
+				default: false,
+				description:
+					'Whether to feed the document\'s metadata into the extraction context. Set Metadata above to provide it.',
 			},
 		],
 	},

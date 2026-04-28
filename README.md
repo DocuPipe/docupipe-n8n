@@ -39,9 +39,9 @@ You need a DocuPipe API key to use this node:
 
 ### Extraction
 
-- **Extract** - Extract structured data from a document using a schema you defined in DocuPipe
+- **Extract** - Extract structured data from a document using a schema you defined in DocuPipe. Supports both **V3** (default, latest agentic engine) and **V2** (previous engine) via the API Version field.
 - **Get Result** - Retrieve the extracted data after extraction completes
-- **Upload and Extract** - Upload a document and extract data in one step
+- **Upload and Extract** - Upload a document and extract data in one step. Supports both **V3** (default) and **V2** engines.
 
 ### Classification
 
@@ -182,6 +182,18 @@ N8N_COMMUNITY_PACKAGES_ALLOW_TOOL_USAGE=true
 
 - Tested with n8n version 2.12.3
 - Requires Node.js 18 or later
+
+## Upgrading from 0.1.2 to 0.1.3
+
+The Extract and Upload+Extract operations now support both V3 (default) and V2 engines, with parameters reorganized into version-specific Additional Fields and Advanced Options collections.
+
+**For existing workflows, please re-open each Extract / Upload+Extract node and:**
+
+1. **API Version** defaults to **V3**. If you want to keep using the V2 engine, switch it to **V2**.
+2. Re-add any settings you previously configured under Additional Fields (Display Mode, Split Mode, Effort Level, Guidelines, Dataset). These do not auto-migrate because the parameter was renamed.
+3. Pages, Timeout, Metadata, and Use Metadata are now under **Advanced Options**.
+
+Workflows that used Extract with no Additional Fields will keep working but will route to the V3 engine, which may produce slightly different extractions than V2. Switch to V2 if you need byte-identical output.
 
 ## Resources
 

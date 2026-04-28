@@ -86,7 +86,7 @@ export class DocuPipe implements INodeType {
 		name: 'docuPipe',
 		icon: 'file:../../icons/docupipe.svg',
 		group: ['transform'],
-		version: 1,
+		version: 2,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
 		description:
 			'Automate document processing, data extraction, and classification with DocuPipe',
@@ -221,26 +221,70 @@ export class DocuPipe implements INodeType {
 						body as never,
 					);
 				} else if (resource === 'extraction' && operation === 'extract') {
+					const apiVersion = this.getNodeParameter('apiVersion', i, 'v3') as 'v2' | 'v3';
 					const documentId = this.getNodeParameter('documentId', i) as string;
 					const schemaId = resolveResourceLocator(
 						this.getNodeParameter('schemaId', i) as { value: string } | string,
 					);
-					const additionalFields = this.getNodeParameter('additionalFields', i) as {
-						dataset?: string;
-					};
 
-					const body: Record<string, unknown> = {
-						documentIds: [documentId],
-						schemaId,
-					};
-					if (additionalFields.dataset) body.dataset = additionalFields.dataset;
+					if (apiVersion === 'v3') {
+						const f = this.getNodeParameter('additionalFieldsV3', i, {}) as {
+							effortLevel?: string;
+							guidelines?: string;
+						};
+						const adv = this.getNodeParameter('advancedV3', i, {}) as {
+							pages?: string;
+							timeout?: number;
+							useMetadata?: boolean;
+						};
+						const body: Record<string, unknown> = { documentId, schemaId };
+						if (f.effortLevel) body.effortLevel = f.effortLevel;
+						if (f.guidelines) body.guidelines = f.guidelines;
+						if (adv.useMetadata !== undefined) body.useMetadata = adv.useMetadata;
+						if (adv.pages) {
+							body.pages = adv.pages.split(',').map((p) => parseInt(p.trim(), 10));
+						}
+						if (adv.timeout) body.timeout = adv.timeout;
 
-					responseData = await docuPipeApiRequest.call(
-						this,
-						'POST',
-						'/v2/standardize/batch',
-						body as never,
-					);
+						responseData = await docuPipeApiRequest.call(
+							this,
+							'POST',
+							'/v3/standardize',
+							body as never,
+						);
+					} else {
+						const f = this.getNodeParameter('additionalFieldsV2', i, {}) as {
+							displayMode?: string;
+							splitMode?: string;
+							effortLevel?: string;
+							guidelines?: string;
+						};
+						const adv = this.getNodeParameter('advancedV2', i, {}) as {
+							pages?: string;
+							timeout?: number;
+							useMetadata?: boolean;
+						};
+						const body: Record<string, unknown> = {
+							documentIds: [documentId],
+							schemaId,
+						};
+						if (f.displayMode) body.displayMode = f.displayMode;
+						if (f.splitMode) body.splitMode = f.splitMode;
+						if (f.effortLevel) body.effortLevel = f.effortLevel;
+						if (f.guidelines) body.guidelines = f.guidelines;
+						if (adv.useMetadata !== undefined) body.useMetadata = adv.useMetadata;
+						if (adv.pages) {
+							body.pages = [adv.pages.split(',').map((p) => parseInt(p.trim(), 10))];
+						}
+						if (adv.timeout) body.timeout = adv.timeout;
+
+						responseData = await docuPipeApiRequest.call(
+							this,
+							'POST',
+							'/v2/standardize/batch',
+							body as never,
+						);
+					}
 				} else if (resource === 'extraction' && operation === 'getResult') {
 					const standardizationId = this.getNodeParameter(
 						'standardizationId',
@@ -252,34 +296,75 @@ export class DocuPipe implements INodeType {
 						`/standardization/${standardizationId}`,
 					);
 				} else if (resource === 'extraction' && operation === 'uploadAndExtract') {
+					const apiVersion = this.getNodeParameter('apiVersion', i, 'v3') as 'v2' | 'v3';
 					const schemaId = resolveResourceLocator(
 						this.getNodeParameter('schemaId', i) as { value: string } | string,
 					);
-					const additionalFields = this.getNodeParameter('additionalFields', i) as {
-						dataset?: string;
-						metadata?: string;
-					};
+					const standardizeStep: Record<string, unknown> = { schemaIds: [schemaId] };
+					let dataset: string | undefined;
+					let metadata: string | undefined;
+
+					if (apiVersion === 'v3') {
+						const f = this.getNodeParameter('additionalFieldsV3', i, {}) as {
+							dataset?: string;
+							effortLevel?: string;
+							guidelines?: string;
+						};
+						const adv = this.getNodeParameter('advancedV3', i, {}) as {
+							metadata?: string;
+							pages?: string;
+							standardizeTimeout?: number;
+							useMetadata?: boolean;
+						};
+						dataset = f.dataset;
+						metadata = adv.metadata;
+						if (f.effortLevel) standardizeStep.effortLevel = f.effortLevel;
+						if (f.guidelines) standardizeStep.guidelines = f.guidelines;
+						if (adv.useMetadata !== undefined) standardizeStep.useMetadata = adv.useMetadata;
+						if (adv.pages) {
+							standardizeStep.pages = [adv.pages.split(',').map((p) => parseInt(p.trim(), 10))];
+						}
+						if (adv.standardizeTimeout) standardizeStep.standardizeTimeout = adv.standardizeTimeout;
+					} else {
+						const f = this.getNodeParameter('additionalFieldsV2', i, {}) as {
+							dataset?: string;
+							displayMode?: string;
+							splitMode?: string;
+							effortLevel?: string;
+							guidelines?: string;
+						};
+						const adv = this.getNodeParameter('advancedV2', i, {}) as {
+							metadata?: string;
+							pages?: string;
+							standardizeTimeout?: number;
+							useMetadata?: boolean;
+						};
+						dataset = f.dataset;
+						metadata = adv.metadata;
+						if (f.displayMode) standardizeStep.displayMode = f.displayMode;
+						if (f.splitMode) standardizeStep.splitMode = f.splitMode;
+						if (f.effortLevel) standardizeStep.effortLevel = f.effortLevel;
+						if (f.guidelines) standardizeStep.guidelines = f.guidelines;
+						if (adv.useMetadata !== undefined) standardizeStep.useMetadata = adv.useMetadata;
+						if (adv.pages) {
+							standardizeStep.pages = [adv.pages.split(',').map((p) => parseInt(p.trim(), 10))];
+						}
+						if (adv.standardizeTimeout) standardizeStep.standardizeTimeout = adv.standardizeTimeout;
+					}
 
 					// step 1: create a workflow that extracts with this schema on document submit
 					const workflowResponse = (await docuPipeApiRequest.call(
 						this,
 						'POST',
 						'/workflow/on-submit-document',
-						{
-							standardizeStep: {
-								schemaIds: [schemaId],
-							},
-						} as never,
+						{ standardizeStep } as never,
 					)) as { workflowId: string };
 
 					// step 2: upload document with workflowId - DocuPipe auto-extracts after processing
 					const uploadBody = await buildDocumentBody(this, i);
 					uploadBody.workflowId = workflowResponse.workflowId;
-					if (additionalFields.dataset)
-						uploadBody.dataset = additionalFields.dataset;
-					if (additionalFields.metadata) {
-						uploadBody.metadata = parseMetadata(this, additionalFields.metadata, i);
-					}
+					if (dataset) uploadBody.dataset = dataset;
+					if (metadata) uploadBody.metadata = parseMetadata(this, metadata, i);
 
 					responseData = await docuPipeApiRequest.call(
 						this,
